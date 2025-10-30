@@ -64,7 +64,7 @@ Para ejecutar este proyecto, necesitarás un entorno Python (preferiblemente un 
 Asegúrate de tener instaladas las siguientes librerías:
 
 ```bash
-pip install numpy pandas scipy yfinance matplotlib tqdm
+pip install -r requirements.txt
 ```
 
 ### 2\. Parámetros Iniciales
@@ -81,6 +81,82 @@ El comportamiento del modelo se controla mediante el diccionario `METAPARAMETERS
 ### 3\. Ejecución
 
 Simplemente abre el *notebook* deseado (`MonteCarloSimulator.ipynb` o `BacktestHistorical.ipynb`) y ejecuta todas las celdas secuencialmente.
+
+-----
+
+## ✅ Requisitos del Entorno y Versiones
+
+- **Python**: 3.11 (recomendado)
+- **Jupyter**: Notebook/Lab
+- Bibliotecas principales: `numpy`, `pandas`, `matplotlib`, `scipy`, `yfinance`
+- Instala exactamente lo especificado en `requirements.txt` para evitar incompatibilidades.
+
+Notas:
+- `yfinance` desde 0.2.40 ha cambiado el valor por defecto de `auto_adjust=True`. El código ya contempla extracción robusta de `Adj Close`/`Close` para evitar problemas.
+- Si usas entornos antiguos, actualiza `pip` y reinstala dependencias.
+
+-----
+
+## 🗃️ Fuentes de Datos
+
+- Los precios se descargan de **Yahoo Finance** mediante `yfinance`.
+- La extracción usa columnas `Adj Close` y, como respaldo, `Close` si fuese necesario.
+- Puede haber huecos de datos o restricciones temporales; el código limpia columnas vacías y reporta tickers faltantes.
+- Si aparece un error de descarga, reintenta más tarde o verifica conectividad/proxy.
+
+-----
+
+## 🚀 Guía Rápida: Backtest Histórico
+
+1. Abre `BacktestHistorical.ipynb`.
+2. Ejecuta la celda de configuración y descarga de datos (bloques iniciales).
+3. Revisa el bloque de **Optimización** (pesos máximos por activo y Sharpe apalancado).
+4. Ejecuta el bloque de **Backtests con ventanas deslizantes** (CON y SIN DCA).
+5. Explora:
+   - Tablas de rebalanceo mensual (P50)
+   - Métricas comparativas (P50)
+   - Gráficas de trayectorias y zonas de margen crítico
+6. Opcional: usa la sección de **Single Simulation** para un inicio `año/mes` concreto.
+
+-----
+
+## 📚 Glosario Básico
+
+- **DCA (Dollar-Cost Averaging)**: Aportaciones periódicas que se despliegan total o parcialmente según condiciones.
+- **Leverage (Apalancamiento)**: Multiplicador de exposición sobre el capital propio.
+- **Exposure (Exposición)**: Valor total de posiciones (apalancadas).
+- **Equity (Capital)**: Valor neto del portafolio tras PnL.
+- **Maintenance Margin Ratio**: Umbral mínimo de margen (equity/exposure) para evitar liquidación.
+- **Margin Call**: Evento de liquidación cuando el margen cae por debajo del umbral de mantenimiento.
+- **Drawdown**: Caída relativa desde el máximo histórico de equity.
+- **Buffer de Margen**: Parte del DCA que se mantiene en efectivo para proteger el margen.
+
+-----
+
+## 🧪 Reproducibilidad
+
+- Se fija `np.random.seed(42)` en la extracción de ventanas para resultados consistentes.
+- Ventanas históricas no solapadas reducen sesgos por sobre-muestreo.
+- El flujo separa: descarga/limpieza → optimización en train → evaluación en ventanas.
+
+-----
+
+## ⚠️ Limitaciones y Supuestos
+
+- No se modelan explícitamente comisiones, deslizamientos, ni costes de financiación del apalancamiento.
+- Puede existir **survivorship bias** y errores de datos de Yahoo Finance.
+- Los parámetros (apalancamiento, umbrales de margen, factores de despliegue) impactan fuertemente el riesgo de liquidación.
+- Los resultados históricos no garantizan rendimientos futuros.
+
+-----
+
+## 🧩 Troubleshooting
+
+- `ValueError: No se pudieron descargar los datos...`: verifica conexión, rango de fechas y tickers.
+- `Covarianza singular`: el código aplica una matriz diagonal de respaldo y continúa.
+- `Faltan tickers`: se reportan como advertencia y se procede con los disponibles.
+- Si Jupyter se congela, reinicia el kernel y vuelve a ejecutar secuencialmente.
+
 
 -----
 
