@@ -70,11 +70,11 @@ Esta sección presenta un análisis detallado de los resultados del backtest his
 
 Las siguientes visualizaciones muestran las trayectorias de equity para diferentes percentiles:
 
-**Nota importante sobre percentiles:** En la **Figura 1** (comparación de todas las trayectorias), las líneas P10, P50 y P90 representan los **percentiles de capital total en cada momento del tiempo**, no trayectorias individuales. Es decir, en cada día *t*, se calcula el percentil 10, 50 y 90 de todas las trayectorias en ese momento. Por el contrario, las **Figuras 2 y 3** muestran trayectorias específicas seleccionadas basándose en el **Sharpe Ratio** de cada simulación completa.
+**Nota importante sobre percentiles:** En la **Figura 1** (comparación de todas las trayectorias), las líneas **P10 y P90** representan los **percentiles de capital total en cada momento del tiempo**, no trayectorias individuales. Es decir, en cada día *t*, se calcula el percentil 10 y 90 de todas las trayectorias en ese momento. Por el contrario, la línea **P50** es una **trayectoria real seleccionada** basándose en el Sharpe Ratio de cada simulación completa. Las **Figuras 2 y 3** muestran trayectorias específicas seleccionadas basándose en el **Sharpe Ratio** (P10 y P90 respectivamente).
 
 ![Comparación de Todas las Trayectorias](snapshots/all_trajectories_comparison.png)
 
-*Figura 1: Comparación completa de todas las trayectorias simuladas (74 exitosas, 0 margin calls). Las líneas P10, P50 y P90 muestran los percentiles de capital en cada momento del tiempo (no trayectorias individuales). La estrategia CON DCA muestra una dispersión mucho mayor y un crecimiento significativamente superior.*
+*Figura 1: Comparación completa de todas las trayectorias simuladas (74 exitosas, 0 margin calls). Las líneas P10 y P90 muestran los percentiles de capital en cada momento del tiempo (no trayectorias individuales), mientras que P50 es una trayectoria real seleccionada basándose en Sharpe Ratio. La estrategia CON DCA muestra una dispersión mucho mayor y un crecimiento significativamente superior.*
 
 ![Comparación Percentil 10](snapshots/comparison_P10.png)
 
