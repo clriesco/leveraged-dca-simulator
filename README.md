@@ -64,23 +64,25 @@ Ambos *notebooks* calculan y reportan las siguientes métricas clave para evalua
 
 ## 📈 Análisis de Resultados del Backtest Histórico
 
-Esta sección presenta un análisis detallado de los resultados del backtest histórico comparando la estrategia **CON DCA** (activa) versus **SIN DCA** (pasiva), basado en múltiples ventanas deslizantes de 5 años. Los resultados se seleccionaron usando **Sharpe Ratio** como criterio principal para cada percentil (P10, P50, P90), capturando mejor la relación riesgo-retorno que usar solo el capital final.
+Esta sección presenta un análisis detallado de los resultados del backtest histórico comparando la estrategia **CON DCA** (activa) versus **SIN DCA** (pasiva), basado en múltiples ventanas deslizantes de 5 años. En las **Figuras 2 y 3**, los resultados se seleccionaron usando **Sharpe Ratio** como criterio principal para cada percentil (P10, P50, P90), capturando mejor la relación riesgo-retorno que usar solo el capital final.
 
 ### Visualizaciones de Trayectorias
 
-Las siguientes visualizaciones muestran las trayectorias de equity para diferentes percentiles basados en Sharpe Ratio:
+Las siguientes visualizaciones muestran las trayectorias de equity para diferentes percentiles:
+
+**Nota importante sobre percentiles:** En la **Figura 1** (comparación de todas las trayectorias), las líneas P10, P50 y P90 representan los **percentiles de capital total en cada momento del tiempo**, no trayectorias individuales. Es decir, en cada día *t*, se calcula el percentil 10, 50 y 90 de todas las trayectorias en ese momento. Por el contrario, las **Figuras 2 y 3** muestran trayectorias específicas seleccionadas basándose en el **Sharpe Ratio** de cada simulación completa.
 
 ![Comparación de Todas las Trayectorias](snapshots/all_trajectories_comparison.png)
 
-*Figura 1: Comparación completa de todas las trayectorias simuladas (74 exitosas, 0 margin calls). La estrategia CON DCA muestra una dispersión mucho mayor y un crecimiento significativamente superior.*
+*Figura 1: Comparación completa de todas las trayectorias simuladas (74 exitosas, 0 margin calls). Las líneas P10, P50 y P90 muestran los percentiles de capital en cada momento del tiempo (no trayectorias individuales). La estrategia CON DCA muestra una dispersión mucho mayor y un crecimiento significativamente superior.*
 
 ![Comparación Percentil 10](snapshots/comparison_P10.png)
 
-*Figura 2: Comparación en el escenario adverso (P10). CON DCA logra $144,666 (retorno +106.7%) vs SIN DCA con $26,117 (retorno +161.2% pero sobre capital mucho menor).*
+*Figura 2: Comparación de trayectorias específicas seleccionadas basándose en Sharpe Ratio (P10). CON DCA logra $144,666 (retorno +106.7%) vs SIN DCA con $26,117 (retorno +161.2% pero sobre capital mucho menor).*
 
 ![Comparación Percentil 90](snapshots/comparison_P90.png)
 
-*Figura 3: Comparación en el escenario óptimo (P90). CON DCA alcanza $178,944 (retorno +155.6%) vs SIN DCA con $66,170 (retorno +561.7%).*
+*Figura 3: Comparación de trayectorias específicas seleccionadas basándose en Sharpe Ratio (P90). CON DCA alcanza $178,944 (retorno +155.6%) vs SIN DCA con $66,170 (retorno +561.7%).*
 
 ### Análisis de Rendimiento por Percentil
 
