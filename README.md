@@ -37,15 +37,15 @@ La aportación mensual (`$1,000 USD`) no se despliega automáticamente, sino que
 
 #### Gestión Dinámica del Leverage
 
-En la estrategia **CON DCA**, el leverage se gestiona de forma dinámica para mantenerse dentro de un rango objetivo (típicamente 2.5x-3.5x):
+En la estrategia **CON DCA**, el leverage se gestiona de forma dinámica para mantenerse dentro de un rango objetivo (típicamente 2.5x-4x):
 
   * **Mantenimiento del Leverage Mínimo (Reborrow):** Cuando el equity total aumenta (debido a ganancias de mercado), la estrategia aumenta automáticamente la exposición mediante borrow adicional para mantener el leverage por encima del umbral mínimo (e.g., 2.5x). Esto asegura que el capital se utiliza eficientemente y no se "desaprovecha" cuando hay ganancias. El proceso de aumentar el borrow cuando el equity sube se denomina **reborrow**.
   
-  * **Reducción del Leverage Máximo (Sin Reducir Exposición):** Cuando el leverage efectivo supera el umbral máximo (e.g., 3.5x), la estrategia **NO reduce la exposición**. En su lugar, utiliza la aportación mensual (`$1,000`) para aumentar el **colateral (equity)** sin aumentar la exposición. Esto reduce progresivamente el leverage efectivo ($\text{Exposure} / \text{Equity}$) hasta que vuelve a estar por debajo del umbral máximo. Esta estrategia evita la necesidad de liquidar posiciones y permite mantener las posiciones abiertas mientras se alivia el leverage mediante aportaciones de capital.
+  * **Reducción del Leverage Máximo (Sin Reducir Exposición):** Cuando el leverage efectivo supera el umbral máximo (e.g., 4x), la estrategia **NO reduce la exposición**. En su lugar, utiliza la aportación mensual (`$1,000`) para aumentar el **colateral (equity)** sin aumentar la exposición. Esto reduce progresivamente el leverage efectivo ($\text{Exposure} / \text{Equity}$) hasta que vuelve a estar por debajo del umbral máximo. Esta estrategia evita la necesidad de liquidar posiciones y permite mantener las posiciones abiertas mientras se alivia el leverage mediante aportaciones de capital.
 
 #### Protección Contra Margin Call
 
-  * **Límite de Leverage Máximo:** Cuando el leverage efectivo supera el umbral máximo (e.g., 3.5x), el 100% del DCA se mantiene como *cash buffer* o se usa únicamente como colateral adicional (sin aumentar la exposición), evitando aumentar el riesgo cuando el leverage ya es alto.
+  * **Límite de Leverage Máximo:** Cuando el leverage efectivo supera el umbral máximo (e.g., 4x), el 100% del DCA se mantiene como *cash buffer* o se usa únicamente como colateral adicional (sin aumentar la exposición), evitando aumentar el riesgo cuando el leverage ya es alto.
   * **Despliegue Gradual:** El capital solo se despliega si se cumplen condiciones de mercado favorables (e.g., *Drawdown* severo, alta **Desviación de Pesos** respecto al óptimo o **Volatilidad Realizada Baja**). El efecto del despliegue depende del leverage actual:
     - Si el leverage está por debajo del máximo, el capital desplegado puede usarse para aumentar la exposición (mediante borrow adicional) y rebalancear, aumentando así el leverage hacia el objetivo.
     - Si el leverage está por encima del máximo, el capital desplegado se usa únicamente como colateral adicional (sin aumentar la exposición), reduciendo progresivamente el leverage efectivo, tal como se explica en la sección de "Reducción del Leverage Máximo".
@@ -200,7 +200,9 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 
 - **Capital Inicial:** $10,000
 - **Aportación Mensual:** $1,000
-- **Leverage:** 3x
+- **Leverage Inicial:** 3x
+- **Leverage Mínimo:** 2.5x (para mantener con reborrow en CON DCA)
+- **Leverage Máximo:** 4x (umbral para desplegar contribuciones en SIN DCA y límite en CON DCA)
 - **Maintenance Margin Ratio:** 5%
 - **Periodo:** 5 años (aproximadamente 986 días de trading)
 - **Simulaciones Exitosas:** 74 (0 margin calls)
