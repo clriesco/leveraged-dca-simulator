@@ -45,8 +45,10 @@ En la estrategia **CON DCA**, el leverage se gestiona de forma dinámica para ma
 
 #### Protección Contra Margin Call
 
-  * **Análisis de Margen Crítico:** Antes de desplegar capital, se evalúa el **Ratio de Margen Actual** ($\text{Equity} / \text{Exposure}$). Si el ratio cae por debajo de un umbral crítico (`CRITICAL_MARGIN_RATIO`, típicamente 10%), el 100% del DCA se mantiene como *cash buffer* para proteger contra el *margin call*.
-  * **Despliegue Gradual:** El capital solo se despliega (para aumentar el apalancamiento y rebalancear) si se cumplen condiciones de mercado favorables (e.g., *Drawdown* severo, alta **Desviación de Pesos** respecto al óptimo o **Volatilidad Realizada Baja**).
+  * **Límite de Leverage Máximo:** Cuando el leverage efectivo supera el umbral máximo (e.g., 3.5x), el 100% del DCA se mantiene como *cash buffer* o se usa únicamente como colateral adicional (sin aumentar la exposición), evitando aumentar el riesgo cuando el leverage ya es alto.
+  * **Despliegue Gradual:** El capital solo se despliega si se cumplen condiciones de mercado favorables (e.g., *Drawdown* severo, alta **Desviación de Pesos** respecto al óptimo o **Volatilidad Realizada Baja**). El efecto del despliegue depende del leverage actual:
+    - Si el leverage está por debajo del máximo, el capital desplegado puede usarse para aumentar la exposición (mediante borrow adicional) y rebalancear, aumentando así el leverage hacia el objetivo.
+    - Si el leverage está por encima del máximo, el capital desplegado se usa únicamente como colateral adicional (sin aumentar la exposición), reduciendo progresivamente el leverage efectivo, tal como se explica en la sección de "Reducción del Leverage Máximo".
   * **Prioridad:** La estrategia prioriza la reducción del riesgo de liquidación sobre la maximización del crecimiento inmediato.
 
 -----
@@ -69,7 +71,6 @@ Ambos *notebooks* calculan y reportan las siguientes métricas clave para evalua
 | **Métricas de Proximidad al Margin Call** | Conjunto de métricas que evalúan qué tan cerca estuvo la estrategia de un margin call: | Gestión de Riesgo de Liquidación. |
 | &nbsp;&nbsp;• **Margen Mínimo Buffer (%)** | Diferencia mínima entre el ratio de margen actual y el umbral de mantenimiento. Indica el "colchón" de seguridad más estrecho alcanzado. | |
 | &nbsp;&nbsp;• **Margen Mínimo (%)** | El ratio de margen mínimo alcanzado durante toda la simulación (equity/exposure). Valores bajos indican mayor leverage efectivo y mayor riesgo. | |
-| &nbsp;&nbsp;• **Días Bajo Margen Crítico** | Número de días donde el ratio de margen estuvo por debajo del umbral crítico (``CRITICAL_MARGIN_RATIO``). | |
 | &nbsp;&nbsp;• **Días de Supervivencia** | Días hasta el margin call (si ocurrió) o total de días si la simulación sobrevivió. | |
 | &nbsp;&nbsp;• **Drawdown al Margin Call (%)** | El drawdown adicional que podría ocurrir antes de alcanzar el umbral de margin call. | |
 
@@ -114,13 +115,12 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 | **Leverage Efectivo en Max Drawdown (x)** | 4.0x | 2.3x | +1.7x |
 | **Días Bajo el Agua** | 1 (0.1%) | 163 (16.7%) | -162 días |
 | **Margen Mínimo (%)** | 25.1% | 27.7% | -2.6 pp |
-| **Días Bajo Margen Crítico** | 0 (0%) | 0 (0%) | 0 días |
 
 **Análisis P10:**
 - Aunque SIN DCA muestra un retorno porcentual mayor (+161.2% vs +106.7%), esto se debe a que invirtió **solo $10,000** vs $70,000 de CON DCA.
 - CON DCA genera **$118,550 más** en capital final absoluto, demostrando el valor de las aportaciones regulares.
 - CON DCA muestra un Sharpe Ratio significativamente superior (1.42 vs 0.78), indicando mucha mejor compensación riesgo-retorno.
-- **Análisis de Drawdowns:** CON DCA tiene un max drawdown del equity de -53.0% vs -46.0% de SIN DCA. Sin embargo, el **drawdown de la exposición** es mucho menor: -21.9% vs -27.4%, mostrando que cuando el equity cae, la exposición también cae proporcionalmente debido al leverage efectivo (~4.0x). Esto explica por qué **no hay margin call** incluso con caídas del 53%: el margin ratio en el peor momento fue 25.1%, muy por encima del umbral crítico (10%) y de mantenimiento (5%).
+- **Análisis de Drawdowns:** CON DCA tiene un max drawdown del equity de -53.0% vs -46.0% de SIN DCA. Sin embargo, el **drawdown de la exposición** es mucho menor: -21.9% vs -27.4%, mostrando que cuando el equity cae, la exposición también cae proporcionalmente debido al leverage efectivo (~4.0x). Esto explica por qué **no hay margin call** incluso con caídas del 53%: el margin ratio en el peor momento fue 25.1%, muy por encima del umbral de mantenimiento (5%).
 - CON DCA recupera mucho más rápido (26 días vs 132 días).
 - SIN DCA pasa 163 días bajo el agua (16.7% del tiempo) vs solo 1 día (0.1%) para CON DCA, mostrando la diferencia en sostenibilidad del crecimiento.
 
@@ -139,7 +139,6 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 | **Leverage Efectivo en Max Drawdown (x)** | 4.0x | 1.9x | +2.1x |
 | **Días Bajo el Agua** | 1 (0.1%) | 1 (0.1%) | 0 días |
 | **Margen Mínimo (%)** | 24.9% | 32.7% | -7.8 pp |
-| **Días Bajo Margen Crítico** | 0 (0%) | 0 (0%) | 0 días |
 
 **Análisis P50:**
 - CON DCA supera ampliamente a SIN DCA con **+$132,092 adicionales** en capital final.
@@ -164,7 +163,6 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 | **Leverage Efectivo en Max Drawdown (x)** | 3.5x | 2.3x | +1.2x |
 | **Días Bajo el Agua** | 25 (2.5%) | 1 (0.1%) | +24 días |
 | **Margen Mínimo (%)** | 28.7% | 31.7% | -3.0 pp |
-| **Días Bajo Margen Crítico** | 0 (0%) | 0 (0%) | 0 días |
 
 **Análisis P90:**
 - En el mejor escenario, CON DCA genera **+$112,774 adicionales** respecto a SIN DCA.
@@ -185,7 +183,7 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 
 3. **Gestión de Riesgo y Explicación de Ausencia de Margin Calls:**
    - Ambas estrategias logran **0 margin calls** en todas las simulaciones, incluso con caídas del equity de hasta **-56%**.
-   - **¿Por qué no hay margin call con caídas tan grandes?** La clave está en la diferencia entre drawdown del equity y drawdown de la exposición. Cuando los precios caen, el equity cae proporcionalmente, pero la **exposición también cae** porque el valor de las posiciones disminuye. Con un leverage efectivo de ~3-4x, una caída del 50% en el equity resulta en una caída del 15-22% en la exposición, manteniendo el margin ratio (equity/exposure) por encima del umbral crítico (10%) y de mantenimiento (5%). En el peor momento, CON DCA mantuvo márgenes de 24.9%-28.7%, muy por encima de los umbrales de seguridad.
+   - **¿Por qué no hay margin call con caídas tan grandes?** La clave está en la diferencia entre drawdown del equity y drawdown de la exposición. Cuando los precios caen, el equity cae proporcionalmente, pero la **exposición también cae** porque el valor de las posiciones disminuye. Con un leverage efectivo de ~3-4x, una caída del 50% en el equity resulta en una caída del 15-22% en la exposición, manteniendo el margin ratio (equity/exposure) por encima del umbral de mantenimiento (5%). En el peor momento, CON DCA mantuvo márgenes de 24.9%-28.7%, muy por encima del umbral de mantenimiento.
    - CON DCA opera con margen mínimo saludable (~25%-29%), con excelente margen de seguridad incluso en el peor momento.
    - SIN DCA mantiene mayor margen de seguridad (~28%-33%), pero a costa de menor crecimiento y eficiencia.
 
@@ -204,7 +202,6 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 - **Aportación Mensual:** $1,000
 - **Leverage:** 3x
 - **Maintenance Margin Ratio:** 5%
-- **Critical Margin Ratio:** 10%
 - **Periodo:** 5 años (aproximadamente 986 días de trading)
 - **Simulaciones Exitosas:** 74 (0 margin calls)
 
@@ -212,8 +209,8 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 
 Las métricas de **drawdown de exposición** y **margin ratio en el máximo drawdown** ayudan a entender por qué no ocurren margin calls incluso con caídas significativas del equity:
 
-- **Max Drawdown Equity vs Exposure:** Cuando el equity cae un 50%, la exposición típicamente cae solo 15-25% porque el valor de las posiciones también disminuye. Esto mantiene el margin ratio (equity/exposure) por encima de los umbrales críticos.
-- **Margin Ratio en Max Drawdown:** En el peor momento (cuando el equity está en su máximo drawdown), el margin ratio se mantiene en 25-29% para CON DCA y 43-52% para SIN DCA, muy por encima del umbral crítico (10%) y de mantenimiento (5%). Esto explica la ausencia de margin calls.
+- **Max Drawdown Equity vs Exposure:** Cuando el equity cae un 50%, la exposición típicamente cae solo 15-25% porque el valor de las posiciones también disminuye. Esto mantiene el margin ratio (equity/exposure) por encima del umbral de mantenimiento.
+- **Margin Ratio en Max Drawdown:** En el peor momento (cuando el equity está en su máximo drawdown), el margin ratio se mantiene en 25-29% para CON DCA y 43-52% para SIN DCA, muy por encima del umbral de mantenimiento (5%). Esto explica la ausencia de margin calls.
 - **Leverage Efectivo en Max Drawdown:** En el peor momento, CON DCA mantiene leverage efectivo de 3.5-4.0x, mientras que SIN DCA tiene 1.9-2.3x. Esto muestra que CON DCA puede operar con mayor leverage de forma segura porque gestiona mejor el riesgo cuando ocurren caídas.
 
 -----
@@ -261,7 +258,7 @@ El comportamiento del modelo se controla mediante el diccionario `METAPARAMETERS
   * `"monthly_contribution"`: Aportación mensual ($\text{DCA}$).
   * `"simulation_years"`: Horizonte de la simulación (e.g., $5$ años).
   * `"num_simulations"`: Número de trayectorias Monte Carlo (e.g., $10,000$).
-  * `"maintenance_margin_ratio"`, `"safe_margin_ratio"`, `"critical_margin_ratio"`: Umbrales clave para la gestión de riesgo.
+  * `"maintenance_margin_ratio"`, `"safe_margin_ratio"`: Umbrales clave para la gestión de riesgo.
 
 ### 4\. Ejecución
 
@@ -309,8 +306,8 @@ Notas:
 5. Explora:
    - Tablas de rebalanceo mensual (P50)
    - Métricas comparativas para P10, P50 y P90 (basadas en Sharpe Ratio)
-   - Métricas de proximidad al margin call (margen mínimo, días bajo margen crítico, supervivencia)
-   - Gráficas de trayectorias y zonas de margen crítico para P10, P50 y P90
+   - Métricas de proximidad al margin call (margen mínimo, supervivencia)
+   - Gráficas de trayectorias para P10, P50 y P90
    - Visualización de capital acumulado vs. capital inicial en las trayectorias
 6. Opcional: usa la sección de **Single Simulation** para un inicio `año/mes` concreto y analizar una simulación específica con métricas detalladas.
 
@@ -327,7 +324,6 @@ Notas:
 - **Drawdown**: Caída relativa desde el máximo histórico de equity.
 - **Buffer de Margen**: Parte del DCA que se mantiene en efectivo para proteger el margen.
 - **Margin Ratio**: Ratio entre equity y exposure (equity/exposure). Cuando este ratio cae por debajo del umbral de mantenimiento, se produce un margin call.
-- **Critical Margin Ratio**: Umbral de margen crítico (típicamente 10%) que activa medidas de protección adicionales (mantener DCA como buffer).
 - **Capital Acumulado**: Capital total invertido a lo largo del tiempo (inversión inicial + aportaciones acumuladas). Para estrategias SIN DCA, solo incluye aportaciones cuando el leverage efectivo supera el máximo permitido.
 - **Días Bajo el Agua**: Días donde el equity está por debajo del capital acumulado invertido, indicando pérdidas respecto al capital desplegado.
 

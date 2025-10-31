@@ -3,8 +3,7 @@
     "initial_capital": 10000,
     "monthly_contribution": 1000,
     "leverage": 3,
-    "maintenance_margin_ratio": 0.05,
-    "critical_margin_ratio": 0.1
+    "maintenance_margin_ratio": 0.05
   },
   "p10": {
     "with_dca": {
@@ -31,8 +30,6 @@
       "worst_day": -39.37034146549954,
       "min_margin_buffer_pct": 20.070643684020407,
       "min_margin_ratio": 25.070643684020403,
-      "days_under_critical_margin": 0,
-      "time_under_critical_margin_pct": 0.0,
       "survival_days": 986,
       "margin_call_occurred": false,
       "min_drawdown_to_margin_call": 80.05635570024509
@@ -61,8 +58,6 @@
       "worst_day": -12.538217702277219,
       "min_margin_buffer_pct": 22.71763477578507,
       "min_margin_ratio": 27.717634775785065,
-      "days_under_critical_margin": 0,
-      "time_under_critical_margin_pct": 0.0,
       "survival_days": 977,
       "margin_call_occurred": false,
       "min_drawdown_to_margin_call": 81.96094277002256
@@ -93,8 +88,6 @@
       "worst_day": -39.60844696902805,
       "min_margin_buffer_pct": 19.89314019570434,
       "min_margin_ratio": 24.893140195704337,
-      "days_under_critical_margin": 0,
-      "time_under_critical_margin_pct": 0.0,
       "survival_days": 986,
       "margin_call_occurred": false,
       "min_drawdown_to_margin_call": 79.91414517939035
@@ -123,8 +116,6 @@
       "worst_day": -28.982372540212616,
       "min_margin_buffer_pct": 27.68496120109655,
       "min_margin_ratio": 32.68496120109655,
-      "days_under_critical_margin": 0,
-      "time_under_critical_margin_pct": 0.0,
       "survival_days": 986,
       "margin_call_occurred": false,
       "min_drawdown_to_margin_call": 84.70244474442804
@@ -155,8 +146,6 @@
       "worst_day": -11.357856545093323,
       "min_margin_buffer_pct": 23.732339254491936,
       "min_margin_ratio": 28.732339254491933,
-      "days_under_critical_margin": 0,
-      "time_under_critical_margin_pct": 0.0,
       "survival_days": 985,
       "margin_call_occurred": false,
       "min_drawdown_to_margin_call": 82.59800583686093
@@ -185,8 +174,6 @@
       "worst_day": -30.660683910207272,
       "min_margin_buffer_pct": 26.74138878281209,
       "min_margin_ratio": 31.74138878281209,
-      "days_under_critical_margin": 0,
-      "time_under_critical_margin_pct": 0.0,
       "survival_days": 985,
       "margin_call_occurred": false,
       "min_drawdown_to_margin_call": 84.24769617293025
