@@ -149,7 +149,7 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 ### Conclusiones Clave
 
 1. **Superioridad Consistente de CON DCA:**
-   - CON DCA genera **entre $113K y $132K adicionales** en capital final según el percentil, a pesar de requerir mayor inversión inicial.
+   - CON DCA genera **entre $113K y $132K adicionales** en capital final según el percentil, a pesar de requerir un aporte constante y recurrente.
    - La ventaja es consistente en todos los percentiles, demostrando robustez de la estrategia.
 
 2. **Eficiencia de Capital (Sharpe Ratio):**
