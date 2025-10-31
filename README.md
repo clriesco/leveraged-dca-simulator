@@ -35,7 +35,17 @@ Para superar las limitaciones del muestreo diario aleatorio (que destruye la est
 
 La aportación mensual (`$1,000 USD`) no se despliega automáticamente, sino que funciona como un **buffer de capital** que se utiliza de forma condicional, priorizando la seguridad:
 
-  * **Análisis de Margen Crítico:** Antes de desplegar capital, se evalúa el **Ratio de Margen Actual** ($\text{Equity} / \text{Exposure}$). Si el ratio cae por debajo de un umbral crítico (`CRITICAL_MARGIN_RATIO`, típicamente 10%), el $100\%$ del DCA se mantiene como *cash buffer* para proteger contra el *margin call*.
+#### Gestión Dinámica del Leverage
+
+En la estrategia **CON DCA**, el leverage se gestiona de forma dinámica para mantenerse dentro de un rango objetivo (típicamente 2.5x-3.5x):
+
+  * **Mantenimiento del Leverage Mínimo (Reborrow):** Cuando el equity total aumenta (debido a ganancias de mercado), la estrategia aumenta automáticamente la exposición mediante borrow adicional para mantener el leverage por encima del umbral mínimo (e.g., 2.5x). Esto asegura que el capital se utiliza eficientemente y no se "desaprovecha" cuando hay ganancias. El proceso de aumentar el borrow cuando el equity sube se denomina **reborrow**.
+  
+  * **Reducción del Leverage Máximo (Sin Reducir Exposición):** Cuando el leverage efectivo supera el umbral máximo (e.g., 3.5x), la estrategia **NO reduce la exposición**. En su lugar, utiliza la aportación mensual (`$1,000`) para aumentar el **colateral (equity)** sin aumentar la exposición. Esto reduce progresivamente el leverage efectivo ($\text{Exposure} / \text{Equity}$) hasta que vuelve a estar por debajo del umbral máximo. Esta estrategia evita la necesidad de liquidar posiciones y permite mantener las posiciones abiertas mientras se alivia el leverage mediante aportaciones de capital.
+
+#### Protección Contra Margin Call
+
+  * **Análisis de Margen Crítico:** Antes de desplegar capital, se evalúa el **Ratio de Margen Actual** ($\text{Equity} / \text{Exposure}$). Si el ratio cae por debajo de un umbral crítico (`CRITICAL_MARGIN_RATIO`, típicamente 10%), el 100% del DCA se mantiene como *cash buffer* para proteger contra el *margin call*.
   * **Despliegue Gradual:** El capital solo se despliega (para aumentar el apalancamiento y rebalancear) si se cumplen condiciones de mercado favorables (e.g., *Drawdown* severo, alta **Desviación de Pesos** respecto al óptimo o **Volatilidad Realizada Baja**).
   * **Prioridad:** La estrategia prioriza la reducción del riesgo de liquidación sobre la maximización del crecimiento inmediato.
 
