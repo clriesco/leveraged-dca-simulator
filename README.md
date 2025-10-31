@@ -198,9 +198,9 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 - **Periodo:** 5 años (aproximadamente 986 días de trading)
 - **Simulaciones Exitosas:** 74 (0 margin calls)
 
-### Interpretación de las Nuevas Métricas de Drawdown
+### Interpretación de las Métricas de Drawdown
 
-Las nuevas métricas de **drawdown de exposición** y **margin ratio en el máximo drawdown** ayudan a entender por qué no ocurren margin calls incluso con caídas significativas del equity:
+Las métricas de **drawdown de exposición** y **margin ratio en el máximo drawdown** ayudan a entender por qué no ocurren margin calls incluso con caídas significativas del equity:
 
 - **Max Drawdown Equity vs Exposure:** Cuando el equity cae un 50%, la exposición típicamente cae solo 15-25% porque el valor de las posiciones también disminuye. Esto mantiene el margin ratio (equity/exposure) por encima de los umbrales críticos.
 - **Margin Ratio en Max Drawdown:** En el peor momento (cuando el equity está en su máximo drawdown), el margin ratio se mantiene en 25-29% para CON DCA y 43-52% para SIN DCA, muy por encima del umbral crítico (10%) y de mantenimiento (5%). Esto explica la ausencia de margin calls.
