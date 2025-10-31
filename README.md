@@ -15,7 +15,7 @@ El proyecto consta de dos *notebooks* principales que trabajan de forma compleme
 | Archivo | Tipo de Análisis | Descripción |
 | :--- | :--- | :--- |
 | **`MonteCarloSimulator.ipynb`** | **Simulación y Optimización** | Flujo completo que realiza la optimización de pesos (Max Sharpe) y ejecuta miles de simulaciones Monte Carlo. Es el módulo principal para la **proyección de riesgo y rentabilidad a 5 años** con la estrategia activa de DCA condicional. |
-| **`BacktestHistorical.ipynb`** | **Backtest Comparativo** | Módulo de validación que compara la **estrategia ACTIVA (CON DCA condicional)** frente a una **estrategia PASIVA (SIN DCA)** mediante el uso de múltiples ventanas deslizantes de 5 años. Confirma el valor de la gestión activa en periodos históricos específicos. |
+| **`BacktestHistorical.ipynb`** | **Backtest Comparativo** | Módulo de validación que compara la **estrategia ACTIVA (CON DCA condicional)** frente a una **estrategia PASIVA (SIN DCA)** mediante el uso de múltiples ventanas deslizantes de 5 años. Confirma el valor de la gestión activa en periodos históricos específicos. Incluye análisis detallado de métricas de proximidad al margin call y visualizaciones comparativas para P10, P50 y P90 basadas en Sharpe Ratio. |
 
 -----
 
@@ -35,7 +35,7 @@ Para superar las limitaciones del muestreo diario aleatorio (que destruye la est
 
 La aportación mensual (`$2,000 USD`) no se despliega automáticamente, sino que funciona como un **buffer de capital** que se utiliza de forma condicional, priorizando la seguridad:
 
-  * **Análisis de Margen Crítico:** Antes de desplegar capital, se evalúa el **Ratio de Margen Actual** ($\text{Equity} / \text{Exposure}$). Si el ratio cae por debajo de un umbral crítico ($\text{CRITICAL\_MARGIN}$), el $100\%$ del DCA se mantiene como *cash buffer* para proteger contra el *margin call*.
+  * **Análisis de Margen Crítico:** Antes de desplegar capital, se evalúa el **Ratio de Margen Actual** ($\text{Equity} / \text{Exposure}$). Si el ratio cae por debajo de un umbral crítico (``CRITICAL_MARGIN_RATIO``, típicamente 10%), el $100\%$ del DCA se mantiene como *cash buffer* para proteger contra el *margin call*.
   * **Despliegue Gradual:** El capital solo se despliega (para aumentar el apalancamiento y rebalancear) si se cumplen condiciones de mercado favorables (e.g., *Drawdown* severo, alta **Desviación de Pesos** respecto al óptimo o **Volatilidad Realizada Baja**).
   * **Prioridad:** La estrategia prioriza la reducción del riesgo de liquidación sobre la maximización del crecimiento inmediato.
 
@@ -48,10 +48,17 @@ Ambos *notebooks* calculan y reportan las siguientes métricas clave para evalua
 | Métrica | Descripción | Enfoque de Riesgo |
 | :--- | :--- | :--- |
 | **Probabilidad de Margin Call** | Porcentaje de simulaciones (a 1 y 5 años) que resultan en la liquidación del capital. | Riesgo Extremo ($\text{Tail Risk}$). |
-| **Capital Final y Percentiles (P10, P50, P90)** | La dispersión del capital final a 5 años, con un enfoque en el $\text{P10}$ (escenario adverso). | Rendimiento Proyectado. |
+| **Capital Final y Percentiles (P10, P50, P90)** | La dispersión del capital final a 5 años, con un enfoque en el $\text{P10}$ (escenario adverso). Los percentiles se seleccionan basándose en el **Sharpe Ratio** de cada simulación, no solo en el capital final, para capturar mejor la relación riesgo-retorno. | Rendimiento Proyectado. |
 | **IRR (Internal Rate of Return)** | Rentabilidad anualizada, considerando los flujos de caja reales (inversión inicial + aportaciones mensuales). | Rentabilidad Comparable. |
 | **Max Drawdown (Máxima Caída)** | Máxima caída porcentual del capital (Equity) desde su pico histórico en cada trayectoria. | Riesgo de Mercado. |
 | **Sharpe Ratio** | Relación entre el retorno excedente (sobre la tasa libre de riesgo) y la volatilidad, calculado individualmente para cada trayectoria. | Eficiencia del Capital. |
+| **Días Bajo el Agua** | Número total de días donde el equity está por debajo del capital total invertido acumulado (inversión inicial + aportaciones). | Medición de Rendimiento vs. Inversión. |
+| **Métricas de Proximidad al Margin Call** | Conjunto de métricas que evalúan qué tan cerca estuvo la estrategia de un margin call: | Gestión de Riesgo de Liquidación. |
+| &nbsp;&nbsp;• **Margen Mínimo Buffer (%)** | Diferencia mínima entre el ratio de margen actual y el umbral de mantenimiento. Indica el "colchón" de seguridad más estrecho alcanzado. | |
+| &nbsp;&nbsp;• **Margen Mínimo (%)** | El ratio de margen mínimo alcanzado durante toda la simulación (equity/exposure). Valores bajos indican mayor leverage efectivo y mayor riesgo. | |
+| &nbsp;&nbsp;• **Días Bajo Margen Crítico** | Número de días donde el ratio de margen estuvo por debajo del umbral crítico (`CRITICAL_MARGIN_RATIO`). | |
+| &nbsp;&nbsp;• **Días de Supervivencia** | Días hasta el margin call (si ocurrió) o total de días si la simulación sobrevivió. | |
+| &nbsp;&nbsp;• **Drawdown al Margin Call (%)** | El drawdown adicional que podría ocurrir antes de alcanzar el umbral de margin call. | |
 
 -----
 
@@ -59,15 +66,37 @@ Ambos *notebooks* calculan y reportan las siguientes métricas clave para evalua
 
 Para ejecutar este proyecto, necesitarás un entorno Python (preferiblemente un *notebook* de Colab o Jupyter) con las bibliotecas estándar de análisis de datos:
 
-### 1\. Dependencias
+### 1\. Entorno Virtual (Recomendado)
 
-Asegúrate de tener instaladas las siguientes librerías:
+Se recomienda crear un entorno virtual para aislar las dependencias del proyecto:
+
+**En macOS/Linux:**
+```bash
+# Crear un entorno virtual
+python3 -m venv venv
+
+# Activar el entorno virtual
+source venv/bin/activate
+```
+
+**En Windows:**
+```cmd
+# Crear un entorno virtual
+python -m venv venv
+
+# Activar el entorno virtual
+venv\Scripts\activate
+```
+
+### 2\. Dependencias
+
+Con el entorno virtual activado, instala las dependencias del proyecto:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2\. Parámetros Iniciales
+### 3\. Parámetros Iniciales
 
 El comportamiento del modelo se controla mediante el diccionario `METAPARAMETERS` (definido en el Bloque 1 de cada *notebook*). Los parámetros críticos incluyen:
 
@@ -78,9 +107,18 @@ El comportamiento del modelo se controla mediante el diccionario `METAPARAMETERS
   * `"num_simulations"`: Número de trayectorias Monte Carlo (e.g., $10,000$).
   * `"maintenance_margin_ratio"`, `"safe_margin_ratio"`, `"critical_margin_ratio"`: Umbrales clave para la gestión de riesgo.
 
-### 3\. Ejecución
+### 4\. Ejecución
 
 Simplemente abre el *notebook* deseado (`MonteCarloSimulator.ipynb` o `BacktestHistorical.ipynb`) y ejecuta todas las celdas secuencialmente.
+
+**Nota:** Si usas Jupyter Notebook/Lab, asegúrate de que el kernel esté configurado para usar el entorno virtual creado. Si es necesario, instala el kernel de Jupyter en el entorno virtual:
+
+```bash
+pip install ipykernel
+python -m ipykernel install --user --name=venv
+```
+
+Luego selecciona el kernel `venv` desde el menú del notebook.
 
 -----
 
@@ -114,9 +152,11 @@ Notas:
 4. Ejecuta el bloque de **Backtests con ventanas deslizantes** (CON y SIN DCA).
 5. Explora:
    - Tablas de rebalanceo mensual (P50)
-   - Métricas comparativas (P50)
-   - Gráficas de trayectorias y zonas de margen crítico
-6. Opcional: usa la sección de **Single Simulation** para un inicio `año/mes` concreto.
+   - Métricas comparativas para P10, P50 y P90 (basadas en Sharpe Ratio)
+   - Métricas de proximidad al margin call (margen mínimo, días bajo margen crítico, supervivencia)
+   - Gráficas de trayectorias y zonas de margen crítico para P10, P50 y P90
+   - Visualización de capital acumulado vs. capital inicial en las trayectorias
+6. Opcional: usa la sección de **Single Simulation** para un inicio `año/mes` concreto y analizar una simulación específica con métricas detalladas.
 
 -----
 
@@ -127,9 +167,13 @@ Notas:
 - **Exposure (Exposición)**: Valor total de posiciones (apalancadas).
 - **Equity (Capital)**: Valor neto del portafolio tras PnL.
 - **Maintenance Margin Ratio**: Umbral mínimo de margen (equity/exposure) para evitar liquidación.
-- **Margin Call**: Evento de liquidación cuando el margen cae por debajo del umbral de mantenimiento.
+- **Margin Call**: Evento de liquidación cuando el margen cae por debajo del umbral de mantenimiento (`MAINTENANCE_MARGIN_RATIO`, típicamente 5%).
 - **Drawdown**: Caída relativa desde el máximo histórico de equity.
 - **Buffer de Margen**: Parte del DCA que se mantiene en efectivo para proteger el margen.
+- **Margin Ratio**: Ratio entre equity y exposure (equity/exposure). Cuando este ratio cae por debajo del umbral de mantenimiento, se produce un margin call.
+- **Critical Margin Ratio**: Umbral de margen crítico (típicamente 10%) que activa medidas de protección adicionales (mantener DCA como buffer).
+- **Capital Acumulado**: Capital total invertido a lo largo del tiempo (inversión inicial + aportaciones acumuladas). Para estrategias SIN DCA, solo incluye aportaciones cuando el leverage efectivo supera el máximo permitido.
+- **Días Bajo el Agua**: Días donde el equity está por debajo del capital acumulado invertido, indicando pérdidas respecto al capital desplegado.
 
 -----
 
