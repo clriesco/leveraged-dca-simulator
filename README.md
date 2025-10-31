@@ -35,7 +35,7 @@ Para superar las limitaciones del muestreo diario aleatorio (que destruye la est
 
 La aportación mensual (`$2,000 USD`) no se despliega automáticamente, sino que funciona como un **buffer de capital** que se utiliza de forma condicional, priorizando la seguridad:
 
-  * **Análisis de Margen Crítico:** Antes de desplegar capital, se evalúa el **Ratio de Margen Actual** ($\text{Equity} / \text{Exposure}$). Si el ratio cae por debajo de un umbral crítico (``CRITICAL_MARGIN_RATIO``, típicamente 10%), el $100\%$ del DCA se mantiene como *cash buffer* para proteger contra el *margin call*.
+  * **Análisis de Margen Crítico:** Antes de desplegar capital, se evalúa el **Ratio de Margen Actual** ($\text{Equity} / \text{Exposure}$). Si el ratio cae por debajo de un umbral crítico (`CRITICAL_MARGIN_RATIO`, típicamente 10%), el $100\%$ del DCA se mantiene como *cash buffer* para proteger contra el *margin call*.
   * **Despliegue Gradual:** El capital solo se despliega (para aumentar el apalancamiento y rebalancear) si se cumplen condiciones de mercado favorables (e.g., *Drawdown* severo, alta **Desviación de Pesos** respecto al óptimo o **Volatilidad Realizada Baja**).
   * **Prioridad:** La estrategia prioriza la reducción del riesgo de liquidación sobre la maximización del crecimiento inmediato.
 
@@ -56,7 +56,7 @@ Ambos *notebooks* calculan y reportan las siguientes métricas clave para evalua
 | **Métricas de Proximidad al Margin Call** | Conjunto de métricas que evalúan qué tan cerca estuvo la estrategia de un margin call: | Gestión de Riesgo de Liquidación. |
 | &nbsp;&nbsp;• **Margen Mínimo Buffer (%)** | Diferencia mínima entre el ratio de margen actual y el umbral de mantenimiento. Indica el "colchón" de seguridad más estrecho alcanzado. | |
 | &nbsp;&nbsp;• **Margen Mínimo (%)** | El ratio de margen mínimo alcanzado durante toda la simulación (equity/exposure). Valores bajos indican mayor leverage efectivo y mayor riesgo. | |
-| &nbsp;&nbsp;• **Días Bajo Margen Crítico** | Número de días donde el ratio de margen estuvo por debajo del umbral crítico (`CRITICAL_MARGIN_RATIO`). | |
+| &nbsp;&nbsp;• **Días Bajo Margen Crítico** | Número de días donde el ratio de margen estuvo por debajo del umbral crítico (``CRITICAL_MARGIN_RATIO``). | |
 | &nbsp;&nbsp;• **Días de Supervivencia** | Días hasta el margin call (si ocurrió) o total de días si la simulación sobrevivió. | |
 | &nbsp;&nbsp;• **Drawdown al Margin Call (%)** | El drawdown adicional que podría ocurrir antes de alcanzar el umbral de margin call. | |
 
@@ -167,7 +167,7 @@ Notas:
 - **Exposure (Exposición)**: Valor total de posiciones (apalancadas).
 - **Equity (Capital)**: Valor neto del portafolio tras PnL.
 - **Maintenance Margin Ratio**: Umbral mínimo de margen (equity/exposure) para evitar liquidación.
-- **Margin Call**: Evento de liquidación cuando el margen cae por debajo del umbral de mantenimiento (`MAINTENANCE_MARGIN_RATIO`, típicamente 5%).
+- **Margin Call**: Evento de liquidación cuando el margen cae por debajo del umbral de mantenimiento (``MAINTENANCE_MARGIN_RATIO``, típicamente 5%).
 - **Drawdown**: Caída relativa desde el máximo histórico de equity.
 - **Buffer de Margen**: Parte del DCA que se mantiene en efectivo para proteger el margen.
 - **Margin Ratio**: Ratio entre equity y exposure (equity/exposure). Cuando este ratio cae por debajo del umbral de mantenimiento, se produce un margin call.
