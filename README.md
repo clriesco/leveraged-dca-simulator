@@ -50,7 +50,10 @@ Ambos *notebooks* calculan y reportan las siguientes métricas clave para evalua
 | **Probabilidad de Margin Call** | Porcentaje de simulaciones (a 1 y 5 años) que resultan en la liquidación del capital. | Riesgo Extremo ($\text{Tail Risk}$). |
 | **Capital Final y Percentiles (P10, P50, P90)** | La dispersión del capital final a 5 años, con un enfoque en el $\text{P10}$ (escenario adverso). Los percentiles se seleccionan basándose en el **Sharpe Ratio** de cada simulación, no solo en el capital final, para capturar mejor la relación riesgo-retorno. | Rendimiento Proyectado. |
 | **IRR (Internal Rate of Return)** | Rentabilidad anualizada, considerando los flujos de caja reales (inversión inicial + aportaciones mensuales). | Rentabilidad Comparable. |
-| **Max Drawdown (Máxima Caída)** | Máxima caída porcentual del capital (Equity) desde su pico histórico en cada trayectoria. | Riesgo de Mercado. |
+| **Max Drawdown Equity (%)** | Máxima caída porcentual del capital (Equity) desde su pico histórico en cada trayectoria. | Riesgo de Mercado. |
+| **Max Drawdown Exposure (%)** | Máxima caída porcentual de la exposición total (Exposure) desde su pico histórico. Esta métrica ayuda a entender si las caídas del equity están acompañadas de caídas proporcionales en la exposición. | Riesgo de Mercado. |
+| **Margen Ratio en Max Drawdown (%)** | Ratio de margen (equity/exposure) en el momento del máximo drawdown del equity. Valores altos (>20%) indican margen saludable incluso en el peor momento. | Gestión de Riesgo de Liquidación. |
+| **Leverage Efectivo en Max Drawdown (x)** | Leverage efectivo (exposure/equity) en el momento del máximo drawdown del equity. | Gestión de Riesgo de Liquidación. |
 | **Sharpe Ratio** | Relación entre el retorno excedente (sobre la tasa libre de riesgo) y la volatilidad, calculado individualmente para cada trayectoria. | Eficiencia del Capital. |
 | **Días Bajo el Agua** | Número total de días donde el equity está por debajo del capital total invertido acumulado (inversión inicial + aportaciones). | Medición de Rendimiento vs. Inversión. |
 | **Métricas de Proximidad al Margin Call** | Conjunto de métricas que evalúan qué tan cerca estuvo la estrategia de un margin call: | Gestión de Riesgo de Liquidación. |
@@ -95,7 +98,10 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 | **Retorno Total (%)** | +106.7% | +161.2% | -54.5 pp |
 | **CAGR (%)** | 98.1% | 28.1% | **+70.0 pp** |
 | **Sharpe Ratio** | 1.42 | 0.78 | **+0.64** |
-| **Max Drawdown (%)** | -53.0% | -46.0% | -7.0 pp |
+| **Max Drawdown Equity (%)** | -53.0% | -46.0% | -7.0 pp |
+| **Max Drawdown Exposure (%)** | -21.9% | -27.4% | +5.5 pp |
+| **Margen Ratio en Max Drawdown (%)** | 25.1% | 44.3% | -19.2 pp |
+| **Leverage Efectivo en Max Drawdown (x)** | 4.0x | 2.3x | +1.7x |
 | **Días Bajo el Agua** | 1 (0.1%) | 163 (16.7%) | -162 días |
 | **Margen Mínimo (%)** | 25.1% | 27.7% | -2.6 pp |
 | **Días Bajo Margen Crítico** | 0 (0%) | 0 (0%) | 0 días |
@@ -104,7 +110,8 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 - Aunque SIN DCA muestra un retorno porcentual mayor (+161.2% vs +106.7%), esto se debe a que invirtió **solo $10,000** vs $70,000 de CON DCA.
 - CON DCA genera **$118,550 más** en capital final absoluto, demostrando el valor de las aportaciones regulares.
 - CON DCA muestra un Sharpe Ratio significativamente superior (1.42 vs 0.78), indicando mucha mejor compensación riesgo-retorno.
-- CON DCA tiene un max drawdown similar pero mejor gestionado (-53.0% vs -46.0%), con recuperación más rápida (26 días vs 132 días).
+- **Análisis de Drawdowns:** CON DCA tiene un max drawdown del equity de -53.0% vs -46.0% de SIN DCA. Sin embargo, el **drawdown de la exposición** es mucho menor: -21.9% vs -27.4%, mostrando que cuando el equity cae, la exposición también cae proporcionalmente debido al leverage efectivo (~4.0x). Esto explica por qué **no hay margin call** incluso con caídas del 53%: el margin ratio en el peor momento fue 25.1%, muy por encima del umbral crítico (10%) y de mantenimiento (5%).
+- CON DCA recupera mucho más rápido (26 días vs 132 días).
 - SIN DCA pasa 163 días bajo el agua (16.7% del tiempo) vs solo 1 día (0.1%) para CON DCA, mostrando la diferencia en sostenibilidad del crecimiento.
 
 #### Percentil 50 (Escenario Mediano)
@@ -116,7 +123,10 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 | **Retorno Total (%)** | +144.3% | +289.4% | -145.1 pp |
 | **CAGR (%)** | 106.8% | 41.6% | **+65.2 pp** |
 | **Sharpe Ratio** | 1.68 | 0.95 | **+0.73** |
-| **Max Drawdown (%)** | -53.8% | -55.4% | +1.6 pp |
+| **Max Drawdown Equity (%)** | -53.8% | -55.4% | +1.6 pp |
+| **Max Drawdown Exposure (%)** | -22.4% | -39.2% | +16.8 pp |
+| **Margen Ratio en Max Drawdown (%)** | 24.9% | 51.9% | -27.0 pp |
+| **Leverage Efectivo en Max Drawdown (x)** | 4.0x | 1.9x | +2.1x |
 | **Días Bajo el Agua** | 1 (0.1%) | 1 (0.1%) | 0 días |
 | **Margen Mínimo (%)** | 24.9% | 32.7% | -7.8 pp |
 | **Días Bajo Margen Crítico** | 0 (0%) | 0 (0%) | 0 días |
@@ -125,7 +135,8 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 - CON DCA supera ampliamente a SIN DCA con **+$132,092 adicionales** en capital final.
 - Aunque SIN DCA muestra un retorno porcentual mayor (+289.4% vs +144.3%), esto se debe a que invirtió **solo $10,000** vs $70,000 de CON DCA.
 - El Sharpe Ratio de CON DCA (1.68) es significativamente superior (77% mejor), confirmando mucha mejor eficiencia de capital.
-- Ambas estrategias muestran drawdowns similares (-53.8% vs -55.4%), pero CON DCA recupera mucho más rápido (11 días vs 263 días).
+- **Análisis de Drawdowns:** CON DCA tiene un max drawdown del equity de -53.8% vs -55.4% de SIN DCA. El **drawdown de la exposición** es mucho menor para CON DCA: -22.4% vs -39.2%. En el peor momento, CON DCA mantuvo un margin ratio de 24.9% con leverage efectivo de 4.0x, mientras que SIN DCA tuvo un margin ratio de 51.9% con leverage de solo 1.9x. Esto muestra que CON DCA opera con mayor leverage pero mantiene márgenes saludables porque la exposición también cae cuando el equity cae.
+- CON DCA recupera mucho más rápido (11 días vs 263 días).
 - Ambas estrategias muestran **0 margin calls** y margen mínimo saludable (>24% para ambas).
 
 #### Percentil 90 (Escenario Óptimo)
@@ -137,7 +148,10 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 | **Retorno Total (%)** | +155.6% | +561.7% | -406.1 pp |
 | **CAGR (%)** | 109.3% | 62.2% | **+47.1 pp** |
 | **Sharpe Ratio** | 1.95 | 1.21 | **+0.74** |
-| **Max Drawdown (%)** | -42.1% | -56.4% | +14.3 pp |
+| **Max Drawdown Equity (%)** | -42.1% | -56.4% | +14.3 pp |
+| **Max Drawdown Exposure (%)** | -15.1% | -35.7% | +20.6 pp |
+| **Margen Ratio en Max Drawdown (%)** | 28.7% | 43.0% | -14.3 pp |
+| **Leverage Efectivo en Max Drawdown (x)** | 3.5x | 2.3x | +1.2x |
 | **Días Bajo el Agua** | 25 (2.5%) | 1 (0.1%) | +24 días |
 | **Margen Mínimo (%)** | 28.7% | 31.7% | -3.0 pp |
 | **Días Bajo Margen Crítico** | 0 (0%) | 0 (0%) | 0 días |
@@ -146,6 +160,7 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 - En el mejor escenario, CON DCA genera **+$112,774 adicionales** respecto a SIN DCA.
 - Aunque SIN DCA muestra un retorno porcentual mucho mayor (+561.7% vs +155.6%), esto se debe a que invirtió **solo $10,000** vs $70,000 de CON DCA.
 - CON DCA muestra un Sharpe Ratio superior (1.95 vs 1.21), confirmando mejor eficiencia de capital (62% mejor).
+- **Análisis de Drawdowns:** CON DCA tiene un max drawdown del equity de -42.1% vs -56.4% de SIN DCA. El **drawdown de la exposición** es aún más favorable para CON DCA: -15.1% vs -35.7%. En el peor momento, CON DCA mantuvo un margin ratio de 28.7% con leverage efectivo de 3.5x, mientras que SIN DCA tuvo un margin ratio de 43.0% con leverage de 2.3x. Esto confirma que CON DCA gestiona mejor el riesgo incluso con mayor leverage.
 - CON DCA tiene un max drawdown significativamente menor (-42.1% vs -56.4%), demostrando mejor gestión de riesgo en el escenario óptimo.
 
 ### Conclusiones Clave
@@ -158,9 +173,10 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
    - CON DCA muestra Sharpe Ratios consistentemente superiores (1.42-1.95 vs 0.78-1.21), siendo entre 62% y 77% mejor.
    - Esto indica que las aportaciones regulares y la gestión activa generan mucha mejor compensación riesgo-retorno.
 
-3. **Gestión de Riesgo:**
-   - Ambas estrategias logran **0 margin calls** en todas las simulaciones.
-   - CON DCA opera con margen mínimo saludable (~25%-29%), con excelente margen de seguridad.
+3. **Gestión de Riesgo y Explicación de Ausencia de Margin Calls:**
+   - Ambas estrategias logran **0 margin calls** en todas las simulaciones, incluso con caídas del equity de hasta **-56%**.
+   - **¿Por qué no hay margin call con caídas tan grandes?** La clave está en la diferencia entre drawdown del equity y drawdown de la exposición. Cuando los precios caen, el equity cae proporcionalmente, pero la **exposición también cae** porque el valor de las posiciones disminuye. Con un leverage efectivo de ~3-4x, una caída del 50% en el equity resulta en una caída del 15-22% en la exposición, manteniendo el margin ratio (equity/exposure) por encima del umbral crítico (10%) y de mantenimiento (5%). En el peor momento, CON DCA mantuvo márgenes de 24.9%-28.7%, muy por encima de los umbrales de seguridad.
+   - CON DCA opera con margen mínimo saludable (~25%-29%), con excelente margen de seguridad incluso en el peor momento.
    - SIN DCA mantiene mayor margen de seguridad (~28%-33%), pero a costa de menor crecimiento y eficiencia.
 
 4. **Rentabilidad Ajustada por Inversión:**
@@ -176,11 +192,19 @@ Las siguientes visualizaciones muestran las trayectorias de equity para diferent
 
 - **Capital Inicial:** $10,000
 - **Aportación Mensual:** $1,000
-- **Leverage:** 3x (mínimo: 2.5x, máximo: 3.5x)
+- **Leverage:** 3x
 - **Maintenance Margin Ratio:** 5%
 - **Critical Margin Ratio:** 10%
 - **Periodo:** 5 años (aproximadamente 986 días de trading)
 - **Simulaciones Exitosas:** 74 (0 margin calls)
+
+### Interpretación de las Nuevas Métricas de Drawdown
+
+Las nuevas métricas de **drawdown de exposición** y **margin ratio en el máximo drawdown** ayudan a entender por qué no ocurren margin calls incluso con caídas significativas del equity:
+
+- **Max Drawdown Equity vs Exposure:** Cuando el equity cae un 50%, la exposición típicamente cae solo 15-25% porque el valor de las posiciones también disminuye. Esto mantiene el margin ratio (equity/exposure) por encima de los umbrales críticos.
+- **Margin Ratio en Max Drawdown:** En el peor momento (cuando el equity está en su máximo drawdown), el margin ratio se mantiene en 25-29% para CON DCA y 43-52% para SIN DCA, muy por encima del umbral crítico (10%) y de mantenimiento (5%). Esto explica la ausencia de margin calls.
+- **Leverage Efectivo en Max Drawdown:** En el peor momento, CON DCA mantiene leverage efectivo de 3.5-4.0x, mientras que SIN DCA tiene 1.9-2.3x. Esto muestra que CON DCA puede operar con mayor leverage de forma segura porque gestiona mejor el riesgo cuando ocurren caídas.
 
 -----
 
