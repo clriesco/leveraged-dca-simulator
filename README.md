@@ -62,6 +62,126 @@ Ambos *notebooks* calculan y reportan las siguientes métricas clave para evalua
 
 -----
 
+## 📈 Análisis de Resultados del Backtest Histórico
+
+Esta sección presenta un análisis detallado de los resultados del backtest histórico comparando la estrategia **CON DCA** (activa) versus **SIN DCA** (pasiva), basado en múltiples ventanas deslizantes de 5 años. Los resultados se seleccionaron usando **Sharpe Ratio** como criterio principal para cada percentil (P10, P50, P90), capturando mejor la relación riesgo-retorno que usar solo el capital final.
+
+### Visualizaciones de Trayectorias
+
+Las siguientes visualizaciones muestran las trayectorias de equity para diferentes percentiles basados en Sharpe Ratio:
+
+![Comparación de Todas las Trayectorias](snapshots/all_trajectories_comparison.png)
+
+*Figura 1: Comparación completa de todas las trayectorias simuladas (74 exitosas, 0 margin calls). La estrategia CON DCA muestra una dispersión mucho mayor y un crecimiento significativamente superior.*
+
+![Comparación Percentil 10](snapshots/comparison_P10.png)
+
+*Figura 2: Comparación en el escenario adverso (P10). CON DCA logra $144,666 (retorno +106.7%) vs SIN DCA con $26,117 (retorno +161.2% pero sobre capital mucho menor).*
+
+![Comparación Percentil 90](snapshots/comparison_P90.png)
+
+*Figura 3: Comparación en el escenario óptimo (P90). CON DCA alcanza $178,944 (retorno +155.6%) vs SIN DCA con $66,170 (retorno +561.7%).*
+
+### Análisis de Rendimiento por Percentil
+
+#### Percentil 10 (Escenario Adverso)
+
+| Métrica | CON DCA | SIN DCA | Diferencia |
+| :--- | :--- | :--- | :--- |
+| **Capital Final** | $144,666 | $26,117 | **+$118,550** (+454%) |
+| **Total Invertido** | $70,000 | $10,000 | - |
+| **Retorno Total (%)** | +106.7% | +161.2% | -54.5 pp |
+| **CAGR (%)** | 98.1% | 28.1% | **+70.0 pp** |
+| **Sharpe Ratio** | 1.42 | 0.78 | **+0.64** |
+| **Max Drawdown (%)** | -53.0% | -46.0% | -7.0 pp |
+| **Días Bajo el Agua** | 1 (0.1%) | 163 (16.7%) | -162 días |
+| **Margen Mínimo (%)** | 25.1% | 27.7% | -2.6 pp |
+| **Días Bajo Margen Crítico** | 0 (0%) | 0 (0%) | 0 días |
+
+**Análisis P10:**
+- Aunque SIN DCA muestra un retorno porcentual mayor (+161.2% vs +106.7%), esto se debe a que invirtió **solo $10,000** vs $70,000 de CON DCA.
+- CON DCA genera **$118,550 más** en capital final absoluto, demostrando el valor de las aportaciones regulares.
+- CON DCA muestra un Sharpe Ratio significativamente superior (1.42 vs 0.78), indicando mucha mejor compensación riesgo-retorno.
+- CON DCA tiene un max drawdown similar pero mejor gestionado (-53.0% vs -46.0%), con recuperación más rápida (26 días vs 132 días).
+- SIN DCA pasa 163 días bajo el agua (16.7% del tiempo) vs solo 1 día (0.1%) para CON DCA, mostrando la diferencia en sostenibilidad del crecimiento.
+
+#### Percentil 50 (Escenario Mediano)
+
+| Métrica | CON DCA | SIN DCA | Diferencia |
+| :--- | :--- | :--- | :--- |
+| **Capital Final** | $171,028 | $38,936 | **+$132,092** (+339%) |
+| **Total Invertido** | $70,000 | $10,000 | - |
+| **Retorno Total (%)** | +144.3% | +289.4% | -145.1 pp |
+| **CAGR (%)** | 106.8% | 41.6% | **+65.2 pp** |
+| **Sharpe Ratio** | 1.68 | 0.95 | **+0.73** |
+| **Max Drawdown (%)** | -53.8% | -55.4% | +1.6 pp |
+| **Días Bajo el Agua** | 1 (0.1%) | 1 (0.1%) | 0 días |
+| **Margen Mínimo (%)** | 24.9% | 32.7% | -7.8 pp |
+| **Días Bajo Margen Crítico** | 0 (0%) | 0 (0%) | 0 días |
+
+**Análisis P50:**
+- CON DCA supera ampliamente a SIN DCA con **+$132,092 adicionales** en capital final.
+- Aunque SIN DCA muestra un retorno porcentual mayor (+289.4% vs +144.3%), esto se debe a que invirtió **solo $10,000** vs $70,000 de CON DCA.
+- El Sharpe Ratio de CON DCA (1.68) es significativamente superior (77% mejor), confirmando mucha mejor eficiencia de capital.
+- Ambas estrategias muestran drawdowns similares (-53.8% vs -55.4%), pero CON DCA recupera mucho más rápido (11 días vs 263 días).
+- Ambas estrategias muestran **0 margin calls** y margen mínimo saludable (>24% para ambas).
+
+#### Percentil 90 (Escenario Óptimo)
+
+| Métrica | CON DCA | SIN DCA | Diferencia |
+| :--- | :--- | :--- | :--- |
+| **Capital Final** | $178,944 | $66,170 | **+$112,774** (+170%) |
+| **Total Invertido** | $70,000 | $10,000 | - |
+| **Retorno Total (%)** | +155.6% | +561.7% | -406.1 pp |
+| **CAGR (%)** | 109.3% | 62.2% | **+47.1 pp** |
+| **Sharpe Ratio** | 1.95 | 1.21 | **+0.74** |
+| **Max Drawdown (%)** | -42.1% | -56.4% | +14.3 pp |
+| **Días Bajo el Agua** | 25 (2.5%) | 1 (0.1%) | +24 días |
+| **Margen Mínimo (%)** | 28.7% | 31.7% | -3.0 pp |
+| **Días Bajo Margen Crítico** | 0 (0%) | 0 (0%) | 0 días |
+
+**Análisis P90:**
+- En el mejor escenario, CON DCA genera **+$112,774 adicionales** respecto a SIN DCA.
+- Aunque SIN DCA muestra un retorno porcentual mucho mayor (+561.7% vs +155.6%), esto se debe a que invirtió **solo $10,000** vs $70,000 de CON DCA.
+- CON DCA muestra un Sharpe Ratio superior (1.95 vs 1.21), confirmando mejor eficiencia de capital (62% mejor).
+- CON DCA tiene un max drawdown significativamente menor (-42.1% vs -56.4%), demostrando mejor gestión de riesgo en el escenario óptimo.
+
+### Conclusiones Clave
+
+1. **Superioridad Consistente de CON DCA:**
+   - CON DCA genera **entre $113K y $132K adicionales** en capital final según el percentil, a pesar de requerir mayor inversión inicial.
+   - La ventaja es consistente en todos los percentiles, demostrando robustez de la estrategia.
+
+2. **Eficiencia de Capital (Sharpe Ratio):**
+   - CON DCA muestra Sharpe Ratios consistentemente superiores (1.42-1.95 vs 0.78-1.21), siendo entre 62% y 77% mejor.
+   - Esto indica que las aportaciones regulares y la gestión activa generan mucha mejor compensación riesgo-retorno.
+
+3. **Gestión de Riesgo:**
+   - Ambas estrategias logran **0 margin calls** en todas las simulaciones.
+   - CON DCA opera con margen mínimo saludable (~25%-29%), con excelente margen de seguridad.
+   - SIN DCA mantiene mayor margen de seguridad (~28%-33%), pero a costa de menor crecimiento y eficiencia.
+
+4. **Rentabilidad Ajustada por Inversión:**
+   - Los retornos porcentuales pueden ser engañosos: SIN DCA muestra retornos altos porque invierte menos (solo $10,000 vs $70,000).
+   - La métrica relevante es el **capital final absoluto**: CON DCA genera consistentemente más valor absoluto.
+
+5. **Volatilidad y Drawdowns:**
+   - CON DCA muestra drawdowns similares o menores que SIN DCA (-42% a -54% vs -46% a -56%).
+   - CON DCA recupera mucho más rápido de los drawdowns (11-71 días vs 132-365 días), demostrando mejor gestión del riesgo.
+   - En P10, SIN DCA pasa 163 días bajo el agua (16.7% del tiempo) vs solo 1 día (0.1%) para CON DCA.
+
+### Parámetros del Análisis
+
+- **Capital Inicial:** $10,000
+- **Aportación Mensual:** $1,000
+- **Leverage:** 3x (mínimo: 2.5x, máximo: 3.5x)
+- **Maintenance Margin Ratio:** 5%
+- **Critical Margin Ratio:** 10%
+- **Periodo:** 5 años (aproximadamente 986 días de trading)
+- **Simulaciones Exitosas:** 74 (0 margin calls)
+
+-----
+
 ## 🛠️ Instalación y Ejecución
 
 Para ejecutar este proyecto, necesitarás un entorno Python (preferiblemente un *notebook* de Colab o Jupyter) con las bibliotecas estándar de análisis de datos:
@@ -206,7 +326,6 @@ Notas:
 
 ## *Este proyecto está diseñado únicamente con fines educativos y de investigación. No constituye asesoramiento financiero.*
 
------
 
 Apache License 2.0
 
